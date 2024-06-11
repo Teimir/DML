@@ -1,0 +1,11 @@
+uart_write A
+uart_write B
+uart_write C
+add A, B, C
+uart_write A
+uart_write B
+uart_write C
+end
+var A, 1
+var B, 2
+var C, 0
