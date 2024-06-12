@@ -27,7 +27,10 @@ macros = {
                      ".startwhile: \nmov r:1, value addr \nlds r:0, [r:1] \ncmpe r:0, r:0, 0h \njz r:31, r:0, .startwhile addr"),
     'whilez': Macro('whilez', ['value'],
                      ".startwhile: \nmov r:1, value addr \nlds r:0, [r:1] \ncmpe r:0, r:0, 0h \njnz r:31, r:0, .startwhile addr"),
+    'ifeq': Macro('ifeq', ['value', 'value1'], "mov r:1, value addr \nlds r:0, [r:1] \nmov r:2, value1 addr \nlds r:3, [r:2] \ncmpe r:0, r:3, r:0 \njz r:31, r:0, .endif addr \n.endif:"),
+    'ifneq': Macro('ifneq', ['value', 'value1'], "mov r:1, value addr \nlds r:0, [r:1] \nmov r:2, value1 addr \nlds r:3, [r:2] \ncmpe r:0, r:3, r:0 \njnz r:31, r:0, .endif addr \n.endif:"),
     'end': Macro('end', [''], '\n'),
+    'endif': Macro('endif', [''], '\n'),
     'set': Macro('set', ['param', 'value'], 'mov r:1, param addr \nmov r:0, value \nlds [r:1], r:0')
 }
 
@@ -44,7 +47,7 @@ def process_macros(code):
         line = line.lstrip()
         for macro in macros.values():
             #print(line, line.lstrip(), line.lstrip().startswith(macro.name), macro.name, line.startswith(macro.name))
-            if line.lstrip().startswith(macro.name):
+            if line.lstrip().split()[0] == macro.name:
 
                 # Получаем аргументы макроса
                 arguments = line[len(macro.name):].strip().split(",")
@@ -57,21 +60,31 @@ def process_macros(code):
                 if macro.name == 'whilenz' or macro.name == 'whilez':
                     d = macro.code.replace(macro.arguments[0], arguments[0])
                     cycles_st.append([i, d.split('\n')[1:]])
+                if macro.name == "ifeq" or macro.name == "ifneq":
+                    d = macro.code.replace(macro.arguments[0], arguments[0], 1)
+                    d = d.replace(macro.arguments[1], arguments[1], 1)
+                    cycles_st.append([i, d.split('\n')[-1].replace('.endif:', f'.endif{i}:')])
                 # Заменяем макрос на соответствующий код
-                if macro.name != 'whilenz' and macro.name != 'whilez':
-                    d = macro.code
-                    for j in range(len(macro.arguments)):
-                        d = d.replace(macro.arguments[j], arguments[j], 1)
-                else:
+                if macro.name == 'whilenz' and macro.name == 'whilez':
                     d = '\n' + d.split('\n')[0][:-2] + str(cycles_st[-1][0]) + ':'
-                if macro.name == 'end':
+                elif macro.name == 'end':
                     s = '\n'.join(cycles_st[-1][1])
                     s = s[:-5] + str(cycles_st[-1][0]) + s[-5:] + '\n'
                     cycles_st.pop(-1)
                     d = s
+                elif macro.name == "ifeq" or macro.name == "ifneq":
+                    d = '\n'.join(d.replace('endif', f'endif{i}').split('\n')[:len(d.split('\n'))-1])
+                elif macro.name == 'endif':
+                    s = ''.join(cycles_st[-1][-1])
+                    cycles_st.pop(-1)
+                    d = s
+                else:
+                    d = macro.code
+                    for j in range(len(macro.arguments)):
+                        d = d.replace(macro.arguments[j], arguments[j], 1)
                 lines[i] = d
 
-                # print(cycles_st)
+                print(cycles_st)
     # Возвращаем обработанный код
     s = ''
     for i in range(len(lines)):

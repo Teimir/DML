@@ -1,12 +1,7 @@
-whilenz B
-    uart_write B
-    dec B
-    set A, r:11
-    whilenz A
-        uart_write A
-        dec A
-    end
-end
+ifneq A, B
+    uart_write A
+endif
+uart_write B
 stop
-var B, 10
-var A, 0
+var A, 5
+var B, 15
