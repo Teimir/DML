@@ -1,11 +1,11 @@
 whilenz B
-uart_write B
-dec B
-set A, 5
-whilenz A
-uart_write A
-dec A
-end
+    uart_write B
+    dec B
+    set A, 5
+    whilenz A
+        uart_write A
+        dec A
+    end
 end
 stop
 var B, 5

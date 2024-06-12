@@ -25,6 +25,8 @@ macros = {
                  'mov r:1, a addr \nmov r:2, b addr \nlds r:0, [r:1] \nlds r:3, [r:2] \nsub r:0, r:3, r:0 \nmov r:1, c addr \nlds [r:1], r:0'),
     'whilenz': Macro('whilenz', ['value'],
                      ".startwhile: \nmov r:1, value addr \nlds r:0, [r:1] \ncmpe r:0, r:0, 0h \njz r:31, r:0, .startwhile addr"),
+    'whilez': Macro('whilez', ['value'],
+                     ".startwhile: \nmov r:1, value addr \nlds r:0, [r:1] \ncmpe r:0, r:0, 0h \njnz r:31, r:0, .startwhile addr"),
     'end': Macro('end', [''], '\n'),
     'set': Macro('set', ['param', 'value'], 'mov r:1, param addr \nmov r:0, value \nlds [r:1], r:0')
 }
@@ -38,10 +40,12 @@ def process_macros(code):
     cycles_st = []
     # Перебираем каждую строку
     for i, line in enumerate(lines):
-
         # Ищем макрос в строке
+        line = line.lstrip()
         for macro in macros.values():
-            if line.startswith(macro.name):
+            #print(line, line.lstrip(), line.lstrip().startswith(macro.name), macro.name, line.startswith(macro.name))
+            if line.lstrip().startswith(macro.name):
+
                 # Получаем аргументы макроса
                 arguments = line[len(macro.name):].strip().split(",")
                 # print(line, arguments, macro.arguments)
@@ -50,35 +54,27 @@ def process_macros(code):
                     raise Exception(
                         f"Ошибка в строке {i + 1}: неправильное количество аргументов для макроса {macro.name}")
 
-                if macro.name == 'whilenz':
-                    print()
-                    print(macro.code, arguments)
+                if macro.name == 'whilenz' or macro.name == 'whilez':
                     d = macro.code.replace(macro.arguments[0], arguments[0])
-                    print()
-                    print(d, arguments)
                     cycles_st.append([i, d.split('\n')[1:]])
                 # Заменяем макрос на соответствующий код
-                if macro.name != 'whilenz':
+                if macro.name != 'whilenz' and macro.name != 'whilez':
                     d = macro.code
                     for j in range(len(macro.arguments)):
                         d = d.replace(macro.arguments[j], arguments[j], 1)
                 else:
-                    d = '\n' + d.split('\n')[0][:-2] + str(cycles_st[-1][0]) + ': \n'
+                    d = '\n' + d.split('\n')[0][:-2] + str(cycles_st[-1][0]) + ':'
                 if macro.name == 'end':
                     s = '\n'.join(cycles_st[-1][1])
-                    s = s[:-5] + str(cycles_st[-1][0]) + s[-5:]
+                    s = s[:-5] + str(cycles_st[-1][0]) + s[-5:] + '\n'
                     cycles_st.pop(-1)
                     d = s
-                print()
-                print(d)
                 lines[i] = d
 
                 # print(cycles_st)
-    print(lines)
     # Возвращаем обработанный код
     s = ''
     for i in range(len(lines)):
-        print(lines[i])
         s += lines[i] + "\n"
     return "".join(s)
 
@@ -116,4 +112,5 @@ with open("output.asm", "w") as f:
     f.write(asm_code)
 
 # Собираем и запускаем ассемблерный код
-# os.system("nasm -f elf64 output.asm && ld output.o")
+os.system('"/ISA/FASM.EXE" output.asm')
+os.system('"/ISA/mif_converter.exe" output.bin output.mif')
