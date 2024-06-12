@@ -1,3 +1,16 @@
+ifeq A, B
+    uart_write A
+endif
+uart_write B
+ifneq A, B
+    uart_write A
+endif
+uart_write B
+set A, 15
+ifeq A, B
+    uart_write A
+endif
+uart_write B
 ifneq A, B
     uart_write A
 endif
