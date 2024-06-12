@@ -85,11 +85,9 @@ def generate_assembly(code):
     processed_code = process_macros(code)
 
     # Заворачиваем код в секцию .text
-    asm_code = textwrap.dedent(f"""
-format binary
+    asm_code = textwrap.dedent(f"""format binary
 
 include "ISA.inc"
-
 {processed_code}
 
     """)

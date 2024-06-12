@@ -1,12 +1,12 @@
 whilenz B
     uart_write B
     dec B
-    set A, 5
+    set A, 10
     whilenz A
         uart_write A
         dec A
     end
 end
 stop
-var B, 5
+var B, 10
 var A, 0
