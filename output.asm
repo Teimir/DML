@@ -3,33 +3,39 @@ format binary
 
 include "ISA.inc"
 
-mov r:1, A addr 
+
+.startwhile0: 
+
+mov r:1, B addr 
 lds r:0, [r:1] 
 out r:0
 mov r:1, B addr 
 lds r:0, [r:1] 
-out r:0
-mov r:1, C addr 
+sub r:0, r:0, 1h 
+lds [r:1], r:0
+mov r:1, A addr 
+mov r:0,  5 
+lds [r:1], r:0
+
+.startwhile4: 
+
+mov r:1, A addr 
 lds r:0, [r:1] 
 out r:0
 mov r:1, A addr 
-mov r:2,  B addr 
 lds r:0, [r:1] 
-lds r:3, [r:2] 
-add r:0, r:3, r:0 
-mov r:1,  C addr 
+sub r:0, r:0, 1h 
 lds [r:1], r:0
 mov r:1, A addr 
 lds r:0, [r:1] 
-out r:0
+cmpe r:0, r:0, 0h 
+jz r:31, r:0, .startwhile4 addr
 mov r:1, B addr 
 lds r:0, [r:1] 
-out r:0
-mov r:1, C addr 
-lds r:0, [r:1] 
-out r:0
+cmpe r:0, r:0, 0h 
+jz r:31, r:0, .startwhile0 addr
 hlt
-A dd  1
-B dd  2
-C dd  0
+B dd  5
+A dd  0
+
 

@@ -1,11 +1,12 @@
-uart_write A
+whilenz B
 uart_write B
-uart_write C
-add A, B, C
+dec B
+set A, 5
+whilenz A
 uart_write A
-uart_write B
-uart_write C
+dec A
 end
-var A, 1
-var B, 2
-var C, 0
+end
+stop
+var B, 5
+var A, 0
