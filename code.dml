@@ -1,7 +1,7 @@
 whilenz B
     uart_write B
     dec B
-    set A, 10
+    set A, r:11
     whilenz A
         uart_write A
         dec A
