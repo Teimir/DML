@@ -1,20 +1,18 @@
+ifgr A, B
+uart_write A
+endif
+ifls A, B
+uart_write B
+endif
 ifeq A, B
-    uart_write A
-endif
+uart_write A
 uart_write B
-ifneq A, B
-    uart_write A
 endif
+uart_write C
+uart_write A
 uart_write B
-set A, 15
-ifeq A, B
-    uart_write A
-endif
-uart_write B
-ifneq A, B
-    uart_write A
-endif
-uart_write B
+uart_write C
 stop
-var A, 5
-var B, 15
+var A, 10
+var B, 11
+var C, 0
