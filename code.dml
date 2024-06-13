@@ -1,18 +1,7 @@
-ifgr A, B
-    uart_write A
-endif
-ifls A, B
-    uart_write B
-endif
-ifeq A, B
-    uart_write A
-    uart_write B
-endif
-uart_write C
-uart_write A
-uart_write B
-uart_write C
-stop
-var A, 10
-var B, 11
-var C, 0
+format binary
+include "ISA.inc"
+in r:1
+out r:1
+not r:1, r:1
+out r:1
+hlt

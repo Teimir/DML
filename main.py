@@ -109,14 +109,15 @@ include "ISA.inc"
     # Возвращаем ассемблерный код
     return asm_code
 
-
+i = int(input())
 # Запрашиваем у пользователя код
 with open("code.dml") as f:
-    code = f.readlines()
-
-# Генерируем ассемблерный код
-asm_code = generate_assembly(code)
-
+        code = f.readlines()
+if i == 0:
+    # Генерируем ассемблерный код
+    asm_code = generate_assembly(code)
+else:
+    asm_code = ''.join(code)
 print('##############')
 print(asm_code)
 # Сохраняем ассемблерный код в файл
