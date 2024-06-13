@@ -1,0 +1,20 @@
+ifeq A, B
+    uart_write A
+endif
+uart_write B
+ifneq A, B
+    uart_write A
+endif
+uart_write B
+set A, 15
+ifeq A, B
+    uart_write A
+endif
+uart_write B
+ifneq A, B
+    uart_write A
+endif
+uart_write B
+stop
+var A, 5
+var B, 15
