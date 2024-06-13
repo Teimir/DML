@@ -29,8 +29,8 @@ macros = {
                      ".startwhile: \nmov r:1, value addr \nlds r:0, [r:1] \ncmpe r:0, r:0, 0h \njnz r:31, r:0, .startwhile addr"),
     'ifeq': Macro('ifeq', ['value', 'value1'], "mov r:1, value addr \nlds r:0, [r:1] \nmov r:2, value1 addr \nlds r:3, [r:2] \ncmpe r:0, r:3, r:0 \njz r:31, r:0, .endif addr \n.endif:"),
     'ifneq': Macro('ifneq', ['value', 'value1'], "mov r:1, value addr \nlds r:0, [r:1] \nmov r:2, value1 addr \nlds r:3, [r:2] \ncmpe r:0, r:3, r:0 \njnz r:31, r:0, .endif addr \n.endif:"),
-    'ifgr': Macro('ifgr', ['value', 'value1'], "mov r:1, value addr \nlds r:0, [r:1] \nmov r:2, value1 addr \nlds r:3, [r:2] \ncmpa r:0, r:3, r:0 \njnz r:31, r:0, .endif addr \n.endif:"),
-    'ifls': Macro('ifls', ['value', 'value1'], "mov r:1, value addr \nlds r:0, [r:1] \nmov r:2, value1 addr \nlds r:3, [r:2] \ncmpa r:0, r:3, r:0 \njz r:31, r:0, .endif addr \n.endif:"),
+    'ifgr': Macro('ifgr', ['value', 'value1'], "mov r:1, value addr \nlds r:0, [r:1] \nmov r:2, value1 addr \nlds r:3, [r:2] \ncmpa r:0, r:0, r:3 \njz r:31, r:0, .endif addr \n.endif:"),
+    'ifls': Macro('ifls', ['value', 'value1'], "mov r:1, value addr \nlds r:0, [r:1] \nmov r:2, value1 addr \nlds r:3, [r:2] \ncmpa r:0, r:0, r:3 \njnz r:31, r:0, .endif addr \n.endif:"),
     'end': Macro('end', [''], '\n'),
     'endif': Macro('endif', [''], '\n'),
     'set': Macro('set', ['param', 'value'], 'mov r:1, param addr \nmov r:0, value \nlds [r:1], r:0')

@@ -1,12 +1,12 @@
 ifgr A, B
-uart_write A
+    uart_write A
 endif
 ifls A, B
-uart_write B
+    uart_write B
 endif
 ifeq A, B
-uart_write A
-uart_write B
+    uart_write A
+    uart_write B
 endif
 uart_write C
 uart_write A
