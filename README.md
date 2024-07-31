@@ -28,8 +28,8 @@
 - cmpa- op1 = op2 > op3 ? -1 : 0		3 оп
 - cmpe- op1 = op2 == op3 ? -1 : 0		3 оп
 - cmpb- op1 = op2 < op3 ? -1 : 0		3 оп
-- jnz	- op1 = op2 == -1 ? op3 : r31+1	3 оп
-- jz	- op1 = op2 == 0 ? op3 : r31+1	3 оп
+- jnz	- op1 = op2 == -1 ? op3 : op1	3 оп
+- jz	- op1 = op2 == 0 ? op3 : op1	3 оп
 
 ## Все инструкции(кроме lds) имеют следующий общий синтаксис:
 ` instr op1, op2, op3 `
